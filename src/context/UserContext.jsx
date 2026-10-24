@@ -28,7 +28,8 @@ export const UserProvider = ({children}) => {
             
             
         } catch (error) {
-            toast.error(error.response.data.message)
+            console.error('Failed to request login OTP:', error)
+            toast.error(error.response?.data?.message || 'Could not send the login code. Please try again.')
             setBtnLoading(false)
         }
     }
@@ -54,7 +55,8 @@ export const UserProvider = ({children}) => {
             fetchCart()
             
         } catch (error) {
-            toast.error(error.response.data.message)
+            console.error('Failed to verify login OTP:', error)
+            toast.error(error.response?.data?.message || 'Could not verify the login code. Please try again.')
             setBtnLoading(false)
         }
     }
