@@ -7,7 +7,7 @@ import { UserProvider } from './context/UserContext.jsx'
 import { ProductProvider } from './context/ProductContext.jsx'
 import { CartProvider } from './context/CartContext.jsx'
 
-export const server = "https://ecommerce-server-1mr9.onrender.com"
+export const server = "https://ecommerce-server-1-qvg5.onrender.com"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
