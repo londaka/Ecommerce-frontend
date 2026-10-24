@@ -14,7 +14,8 @@ const Login = () => {
     const navigate = useNavigate()
 
     const {loginUser, btnLoading} = UserData()
-    const submitHandler = () => {
+    const submitHandler = (event) => {
+        event.preventDefault()
         loginUser(email, navigate)
     }
   return (
@@ -26,17 +27,27 @@ const Login = () => {
                     If you have already got otp on mail than you can directly go to otp tab
                 </CardDescription>
             </CardHeader>
-            <CardContent className='space-y-2'>
-             <div className='space-x-1'>
-               <Label>Enter Email</Label>
+            <form onSubmit={submitHandler}>
+                <CardContent className='space-y-2'>
+                 <div className='space-x-1'>
+                   <Label htmlFor='login-email'>Enter Email</Label>
+                   <Input
+                    id='login-email'
+                    type='email'
+                    autoComplete='email'
+                    required
+                    value={email}
+                    onChange={e=>setEmail(e.target.value)}
+                   />
+                 </div>
+                </CardContent>
 
-               <Input type='email' value={email} onChange={e=>setEmail(e.target.value)}  />
-             </div>
-            </CardContent>
-
-            <CardFooter>
-                <Button disabled={btnLoading} onClick={submitHandler}>{btnLoading?<Loader />: "Submit"}</Button>
-            </CardFooter>
+                <CardFooter>
+                    <Button type='submit' disabled={btnLoading}>
+                      {btnLoading ? <><Loader className='mr-2 animate-spin' /> Sending code…</> : 'Send login code'}
+                    </Button>
+                </CardFooter>
+            </form>
         </Card>
     </div>
   )

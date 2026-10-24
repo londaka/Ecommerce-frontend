@@ -17,19 +17,32 @@ export const UserProvider = ({children}) => {
     const [isAuth, setIsAuth] = useState(false)
 
     async function loginUser(email, navigate){
+        const normalizedEmail = email.trim().toLowerCase()
+        if (!normalizedEmail) {
+            toast.error('Enter your email address to continue.')
+            return
+        }
+
         setBtnLoading(true)
         try {
-            const {data} = await axios.post(`${server}/api/user/login`,{email})
+            const {data} = await axios.post(
+                `${server}/api/user/login`,
+                { email: normalizedEmail },
+                { timeout: 20000 }
+            )
 
             toast.success(data.message)
-            localStorage.setItem('email', email)
+            localStorage.setItem('email', normalizedEmail)
             navigate('/verify')
-            setBtnLoading(false)
-            
-            
         } catch (error) {
             console.error('Failed to request login OTP:', error)
-            toast.error(error.response?.data?.message || 'Could not send the login code. Please try again.')
+            toast.error(
+                error.response?.data?.message ||
+                (error.code === 'ECONNABORTED'
+                    ? 'The login request timed out. Check the server email configuration and try again.'
+                    : 'Could not send the login code. Please try again.')
+            )
+        } finally {
             setBtnLoading(false)
         }
     }
