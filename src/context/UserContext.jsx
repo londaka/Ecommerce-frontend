@@ -34,7 +34,7 @@ export const UserProvider = ({children}) => {
         }
     }
 
-     async function verifyUser(otp, navigate, fetchCart){
+     async function verifyUser(otp, navigate){
         setBtnLoading(true)
         const email = localStorage.getItem('email')
         try {
@@ -52,8 +52,6 @@ export const UserProvider = ({children}) => {
                 secure: true,
                 path:'/'
             })
-            fetchCart()
-            
         } catch (error) {
             console.error('Failed to verify login OTP:', error)
             toast.error(error.response?.data?.message || 'Could not verify the login code. Please try again.')

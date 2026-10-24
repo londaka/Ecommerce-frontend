@@ -8,7 +8,6 @@ import { UserData } from '../context/UserContext'
 import { useNavigate } from 'react-router-dom'
 import { Loader } from 'lucide-react'
 import { useEffect } from 'react'
-import { CartData } from '../context/CartContext'
 
 
 const Verify = () => {
@@ -18,10 +17,8 @@ const Verify = () => {
 
     const {btnLoading, loginUser, verifyUser} = UserData()
 
-    const {fetchCart} = CartData()
-
     const submitHandler = () => {
-       verifyUser(Number(otp), navigate, fetchCart)
+       verifyUser(Number(otp), navigate)
     }
 
     const [timer, setTimer] = useState(30)

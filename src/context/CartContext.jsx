@@ -3,10 +3,12 @@ import Cookies from 'js-cookie'
 import axios from "axios";
 import toast from "react-hot-toast";
 import { server } from '../main'
+import { UserData } from './UserContext'
 
 const CartContext = createContext()
 
 export const CartProvider = ({children})=>{
+    const { isAuth } = UserData()
     const [loading, setLoading] = useState(true)
     const [totalItem, setTotalItem] = useState(0)
     const [subTotal, setSubTotal] = useState(0)
@@ -15,11 +17,20 @@ export const CartProvider = ({children})=>{
     const [cart, setCart] = useState([])
 
     const fetchCart = useCallback(async function fetchCart(){
+        const token = Cookies.get('token')
+        if (!token) {
+            setCart([])
+            setTotalItem(0)
+            setSubTotal(0)
+            setLoading(false)
+            return
+        }
+
         setLoading(true)
         try {
             const {data} = await axios.get(`${server}/api/cart/all`,{
                 headers:{
-                    token: Cookies.get('token'),
+                    token,
                     'Cache-Control': 'no-cache'
                 },
                 timeout: 10000
@@ -96,8 +107,16 @@ export const CartProvider = ({children})=>{
        }
     }
     useEffect(() => {
-        fetchCart()
-    }, [fetchCart])
+        if (isAuth) {
+            fetchCart()
+            return
+        }
+
+        setCart([])
+        setTotalItem(0)
+        setSubTotal(0)
+        setLoading(false)
+    }, [fetchCart, isAuth])
     return <CartContext.Provider value={{cart, totalItem, subTotal, loading, fetchCart, addtoCart, setTotalItem, updateCart, removeFromCart }}>{children}</CartContext.Provider>
 }
 
